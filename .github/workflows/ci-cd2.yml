@@ -1,0 +1,46 @@
+name: CI/CD Pipeline with Docker Compose
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Set up Docker
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v2
+
+    # Build and run services using Docker Compose
+    - name: Build and start Docker Compose
+      run: docker-compose up -d --build
+
+    # Wait for service to be ready
+    - name: Wait until service is available
+      run: |
+        for i in {1..10}; do
+          curl -f http://localhost:5000 && break
+          echo "Waiting for the service..."
+          sleep 5
+        done
+
+    # Test the application
+    - name: Test the app
+      run: curl -f http://localhost:5000
+
+    # Check logs in case of failure
+    - name: Check Docker logs
+      if: failure()
+      run: docker-compose logs
+
+    # Clean up Docker Compose
+    - name: Tear down Docker Compose
+      if: always()
+      run: docker-compose down
