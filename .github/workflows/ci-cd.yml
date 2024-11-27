@@ -77,9 +77,18 @@ jobs:
           docker compose up -d --build
           docker ps # List running containers for verification
           curl -f http://localhost:5000
-          
+
+          # Wait for service to be ready
+      - name: Wait until service is available
+        run: |
+          for i in {1..10}; do
+            curl -f http://localhost:5000 && break
+            echo "Waiting for the service..."
+            sleep 5
+          done
+
       # Test the application
-      - name: Test the app 2
+      - name: Test the app
         run: curl -f http://localhost:5000
 
       # Clean up containers
