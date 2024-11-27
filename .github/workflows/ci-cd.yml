@@ -13,17 +13,6 @@ on:
 #     - name: Checkout code
 #       uses: actions/checkout@v3
 
-#     - name: Set up Docker
-#       uses: docker/setup-buildx-action@v2
-
-#     - name: Build Docker image
-#       run: docker build -t flask-app .
-
-#     - name: Run Docker container
-#       run: docker run -d -p 5000:5000 flask-app
-
-#     - name: Test the app
-#       run: curl -f http://localhost:5000
 
 
 jobs:
@@ -55,6 +44,44 @@ jobs:
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics  # Catch severe issues
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics  # Check for style issues
 
+      - name: Print debugging information
+        run: |
+          echo "Python Version: $(python --version)"
+          echo "Working Directory: $(pwd)"
+          echo "Contents of Working Directory: $(ls -l)"
+          echo "Contents of site-packages: $(ls -l venv/lib/python*/site-packages)"
+
       # Step 5: Run tests
       - name: Run Tests
         run: python test.py  # Execute the test script
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: docker build -t flask-app .
+
+      - name: Run Docker container
+        run: docker run -d -p 5000:5000 flask-app
+
+      - name: Test the app
+        run: curl -f http://localhost:5000
+
+        # Ensure docker-compose is available
+      - name: Install Docker Compose
+        run: sudo apt-get update && sudo apt-get install -y docker-compose
+
+      # Build and run services using docker-compose
+      - name: Run Docker Compose
+        run: |
+          docker-compose up -d --build
+          docker ps # List running containers for verification
+
+      # Test the application
+      - name: Test the app
+        run: curl -f http://localhost:5000
+
+      # Clean up containers
+      - name: Tear down Docker Compose
+        if: always()
+        run: docker-compose down
