@@ -76,7 +76,8 @@ jobs:
         run: |
           docker compose up -d --build
           docker ps # List running containers for verification
-
+          curl -f http://localhost:5000
+          
       # Test the application
       - name: Test the app 2
         run: curl -f http://localhost:5000
