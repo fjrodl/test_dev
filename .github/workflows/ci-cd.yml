@@ -58,14 +58,14 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      - name: Build Docker image
-        run: docker build -t flask-app .
+      # - name: Build Docker image
+      #   run: docker build -t flask-app .
 
-      - name: Run Docker container
-        run: docker run -d -p 5000:5000 flask-app
+      # - name: Run Docker container
+      #   run: docker run -d -p 5000:5000 flask-app
 
-      - name: Test the app
-        run: curl -f http://localhost:5000
+      # - name: Test the app
+      #   run: curl -f http://localhost:5000
 
         # Ensure docker-compose is available
       - name: Install Docker Compose
@@ -74,11 +74,11 @@ jobs:
       # Build and run services using docker-compose
       - name: Run Docker Compose
         run: |
-          docker-compose up -d --build
+          docker compose up -d --build
           docker ps # List running containers for verification
 
       # Test the application
-      - name: Test the app
+      - name: Test the app 2
         run: curl -f http://localhost:5000
 
       # Clean up containers
