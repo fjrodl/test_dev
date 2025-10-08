@@ -1,10 +1,10 @@
-# app.py
-
-from flask import Flask
-
 """
 Ejemplo básico de web utilizando Flask
 """
+
+from flask import Flask
+
+
 app = Flask(__name__)
 
 @app.route("/")
