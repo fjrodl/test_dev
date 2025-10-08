@@ -2,10 +2,16 @@
 
 from flask import Flask
 
+"""
+Ejemplo básico de web utilizando Flask
+"""
 app = Flask(__name__)
 
 @app.route("/")
 def home():
+    """
+    Función base
+    """
     return "Hello, CI/CD with Docker! Miercoles 27"
 
 if __name__ == "__main__":
