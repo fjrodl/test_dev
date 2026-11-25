@@ -20,7 +20,7 @@ jobs:
 
     # Build and run services using Docker Compose
     - name: Build and start Docker Compose
-      run: docker-compose up -d --build
+      run: docker compose up -d --build
 
     # Wait for service to be ready
     - name: Wait until service is available
@@ -38,9 +38,9 @@ jobs:
     # Check logs in case of failure
     - name: Check Docker logs
       if: failure()
-      run: docker-compose logs
+      run: docker compose logs
 
     # Clean up Docker Compose
     - name: Tear down Docker Compose
       if: always()
-      run: docker-compose down
+      run: docker compose down
